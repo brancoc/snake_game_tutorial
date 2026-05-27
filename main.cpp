@@ -3,41 +3,65 @@
 
 using namespace std;
 
-int main () {
+Color red = {223, 85, 80, 255};
+Color green = {173, 204, 96, 255};
+Color dark_green = {43, 51, 24, 255};
 
-    const int SCREEN_WIDTH = 800;
-    const int SCREEN_HEIGHT = 600;
-    int ball_x = 100;
-    int ball_y = 100;
-    int ball_speed_x = 5;
-    int ball_speed_y = 5;
-    int ball_radius = 15;
+int cell_size = 30;
+int cell_count = 25;
 
-    cout << "Hello World" << endl;
+class Food 
+{
 
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "My first RAYLIB program!");
+public:
+    Vector2 position; // numbers represent cells, not pixels
+
+    Food() // constructor of the object
+    {
+        position = GenerateRandomPos();
+    }
+
+    void Draw() 
+    {
+        Rectangle myRect = {static_cast<float>(position.x * cell_size), 
+                            static_cast<float>(position.y * cell_size), 
+                            static_cast<float>(cell_size), 
+                            static_cast<float>(cell_size)};
+        DrawRectangleRounded(myRect, 1.0f, 0, red);
+    }
+
+    Vector2 GenerateRandomPos()
+    {
+        float x = GetRandomValue(0, cell_count - 1);
+        float y = GetRandomValue(0, cell_count - 1);
+        return Vector2{x, y}; // Numbers represent cells, not pixels
+    }
+
+};
+
+
+int main () 
+{
+
+    cout << "Starting the game..." << endl;
+    int size = cell_size * cell_count;
+    InitWindow(size, size, "Retro Snake");
     SetTargetFPS(60);
 
-    while (WindowShouldClose() == false){
-   
-        ball_x += ball_speed_x;
-        ball_y += ball_speed_y;
+    Food food = Food();
 
-        if(ball_x + ball_radius >= SCREEN_WIDTH || ball_x - ball_radius <= 0)
-        {
-            ball_speed_x *= -1;
-        }
-
-        if(ball_y + ball_radius >= SCREEN_HEIGHT || ball_y - ball_radius <= 0)
-        {
-            ball_speed_y *= -1;
-        }
-        
+    while (WindowShouldClose() == false) 
+    {
         BeginDrawing();
-            ClearBackground(BLACK);
-            DrawCircle(ball_x,ball_y,ball_radius, WHITE);
+
+        // Drawing
+        ClearBackground(green);
+        food.Draw();
+
         EndDrawing();
     }
 
+
     CloseWindow();
+    return 0;
 }
